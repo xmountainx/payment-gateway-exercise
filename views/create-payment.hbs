@@ -1,0 +1,73 @@
+{{#contentFor "scripts"}}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#create-payment-form').validate({
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+
+  });
+</script>
+{{/contentFor}}
+
+<h1>Make Payment</h1>
+
+<form id="create-payment-form" action="/create-payment" method="post" data-toggle="validator">
+  <div class="row">
+    <section class="col-md-6">
+      <h3>Order Section</h3>
+      <div class="form-group">
+        <label for="customerName">Name</label>
+        <input type="text" class="form-control" name="customerName" id="customerName" required>
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" required>
+      </div>
+      <div class="form-group">
+        <label for="currency">Currency</label>
+        <select class="form-control" name="currency" id="currency" required>
+          <option>HKD</option>
+          <option>USD</option>
+          <option>AUD</option>
+          <option>EUR</option>
+          <option>JPY</option>
+          <option>CNY</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="price">Price</label>
+
+        <div class="input-group"> 
+          <span class="input-group-addon">$</span>
+          <input type="number" min="0" class="form-control currency" name="price" id="price" required>
+        </div>
+      </div>
+    </section>
+    <section class="col-md-6">
+      <h3>Payment Section</h3>
+      <div class="form-group">
+        <label for="creditCardHolderName">Credit Card Holder Name</label>
+        <input type="text" class="form-control" name="creditCardHolderName" id="creditCardHolderName" required>
+      </div>
+      <div class="form-group">
+        <label for="creditCardNumber">Credit Card Number</label>
+        <input type="text" class="form-control" name="creditCardNumber" id="creditCardNumber" required>
+      </div>
+      <div class="form-group">
+        <label for="creditCardExpiration">Credit Card Expiration</label>
+        <input type="text" class="form-control" name="creditCardExpiration" id="creditCardExpiration" required>
+      </div>
+      <div class="form-group">
+        <label for="creditCardCvv">Credit Card CVV</label>
+        <input type="text" class="form-control" name="creditCardCvv" id="creditCardCvv" required>
+      </div>
+    </section>
+  </div> <!-- /.row -->
+
+  <div class="row">
+    <button class="pull-right btn btn-primary" type="submit">Submit</button>
+  </div> <!-- /.row -->
+
+</form>
