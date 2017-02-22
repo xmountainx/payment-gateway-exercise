@@ -1,0 +1,17 @@
+body {
+  padding: 75px 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.error {
+  margin-top: 6px;
+  color : red;
+}
+
+input.error {
+  border: 1px solid red;
+}
