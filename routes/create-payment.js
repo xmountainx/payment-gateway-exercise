@@ -44,7 +44,8 @@ route.handle = function(req, res) {
     return route.render(req, res);
   }
 
-  res.send(provider);
+  // make payment with payment provider
+  provider.process(req, res, params);
 };
 
 route.extractParams = function(req) {
@@ -63,7 +64,13 @@ route.extractParams = function(req) {
   params.phone = phone('+' + params.areaCode + ' ' + params.phoneNum);
   params.card  = valid.number(params.cardNum);
 
-  var expire = params.expire.split('/');
+  var holder = params.holder ? params.holder.split(' ') : [];
+  if (holder.length > 1) {
+    params.holderFirstName = holder[0];
+    params.holderLastName = params.holder.substr(holder[0].length + 1);
+  }
+
+  var expire = params.expire ? params.expire.split('/') : [];
   if (expire.length === 2) {
     params.expireMonth = parseInt(expire[0]);
     params.expireYear = parseInt(expire[1]);
@@ -95,7 +102,7 @@ route.validate = function(req, params) {
   } else if (isNaN(params.price)) {
     errors.push('Price must be a number');
   }
-  if (!params.holder) {
+  if (!params.holderFirstName || !params.holderLastName) {
     errors.push('Credit Card Holder Name cannot be empty');
   }
   if (!params.cardNum) {

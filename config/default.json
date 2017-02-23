@@ -1,0 +1,10 @@
+{
+    "paypal" : {
+        "mode" : "sandbox",
+        "client_id" : "AbYUZj-6i3X-XpTgf_I1iZvllswY8_C3SCHQ2ENehTKQPqIuzqIZv06ZAbs7GZXdXYCGG7cMyTLHH7eP",
+        "client_secret" : "EDWYgOVr0u3ELDchDGzX3BZylk5HApMkc2bGiQliXi4t8kRZjnO1tZgTRpzdImYRDKe_y5gcrQ4tyLwK",
+		"headers" : {
+			"custom": "header"
+    	}
+    }
+}
