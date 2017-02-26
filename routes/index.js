@@ -6,18 +6,22 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index');
-});''
+});
 
 /* Create Payment Route */
 var createPayment = require('./create-payment');
 
 router.get('/create-payment', createPayment.render);
 router.post('/create-payment', createPayment.handle);
-router.use(provders.routes);
 
+/* braintree */
+var braintree = require('libs/payment-providers/braintree');
+router.post('/braintree', braintree.executeWithNonce);
 
-router.get('/check-payment', function(req, res, next) {
-  res.render('check-payment');
-});
+/* Check Payment Route */
+var checkPayment = require('./check-payment');
+
+router.get('/check-payment', checkPayment.render);
+router.post('/check-payment', checkPayment.handle);
 
 module.exports = router;

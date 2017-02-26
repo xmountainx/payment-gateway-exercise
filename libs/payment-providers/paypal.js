@@ -4,19 +4,15 @@ var debug = require('debug')('create-payment');
 var config = require('config');
 var sdk = require('paypal-rest-sdk');
 
-var TYPE_MAPPING = {
-  'visa' : 'visa',
-  'master-card' : 'mastercard',
-  'american-express' : 'amex',
-  'discover' : 'discover',
-  'jcb' : 'jcb'
-};
+var cardTypes = config.get('paypal-card-type-mapping');
 
 sdk.configure(config.get('paypal'));
 
-var paypal = {};
+var paypal = {
+  'name' : 'paypal'
+};
 
-paypal.process = function(req, res, params) {
+paypal.execute = function(req, res, params) {
   // create paypal payment json object
   var payment = {};
 
@@ -27,7 +23,7 @@ paypal.process = function(req, res, params) {
   payment.payer.funding_instruments = [];
   payment.payer.funding_instruments.push({
     'credit_card' : {
-      'type'   : TYPE_MAPPING[params.card.card.type],
+      'type'   : cardTypes[params.card.card.type],
       'number' : params.cardNum,
       'expire_month': '' + params.expireMonth,
       'expire_year': '' + params.expireYear,
@@ -40,7 +36,7 @@ paypal.process = function(req, res, params) {
         'state': 'OH',
         'postal_code': '43210',
         'country_code': 'US'
-      }  
+      }
     }
   });
 
@@ -61,16 +57,22 @@ paypal.process = function(req, res, params) {
   debug('Submit direct credit card payment to paypal \n' + JSON.stringify(payment, null, 4));
 
   sdk.payment.create(payment, function(err, payment) {
-    if (err) {
-      console.log('err');
-      console.log(JSON.stringify(err, null, 4));
-      throw err;
-    } else {
-      console.log("Create Payment Response");
-      console.log(JSON.stringify(payment, null, 4));
-    }
+    var paymentId = !err && payment ? payment.id : null;
+    paypal.onPaymentCompleted(err, payment.id, payment);
   });
 
+};
+
+paypal.check = function(paymentId, done) {
+  var cb = done || function nop() {};
+  return sdk.payment.get(paymentId, cb);
+};
+
+paypal.onPaymentCompleted = function(err, paymentId, details) {
+  // fake event 
+  debug(err);
+  debug(paymentId);
+  debug(details)
 };
 
 module.exports = paypal;

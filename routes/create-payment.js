@@ -1,23 +1,25 @@
 'use strict'
 
 // libraries
-var debug = require('debug')('create-payment');
-var phone = require('phone');
-var valid = require('card-validator');
-var types = require('credit-card-type').types;
+var debug  = require('debug')('create-payment');
+var phone  = require('phone');
+var config = require('config');
+var valid  = require('card-validator');
+var types  = require('credit-card-type').types;
 
+// payment providers
 var payments = require('../libs/payment-providers');
 
-// const
-var CURRENCY_LIST = ['HKD', 'USD', 'AUD', 'EUR', 'JPY', 'CNY'];
+// suported currency
+var currencyList = config.get('supported-currencies');
 
-// RouteObject
+// Route Object
 var route = {};
 
 route.render = function(req, res) {
   return res.render('create-payment', {
     'errors' : req.errors,
-    'supportedCurrencies' : CURRENCY_LIST,
+    'supportedCurrencies' : currencyList,
     'params' : req.body
   });
 };
@@ -94,7 +96,7 @@ route.validate = function(req, params) {
   }
   if (!params.currency) {
     errors.push('Currency cannot be empty');
-  } else if (CURRENCY_LIST.indexOf(params.currency) === -1) {
+  } else if (currencyList.indexOf(params.currency) === -1) {
     errors.push('Selected Currency doesn\'t support');
   }
   if (!params.price) {
