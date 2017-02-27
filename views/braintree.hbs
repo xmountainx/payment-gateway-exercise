@@ -1,0 +1,44 @@
+{{#contentFor "scripts"}}
+
+<script src="https://js.braintreegateway.com/web/3.8.0/js/client.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    braintree.client.create({
+      'authorization' : 'sandbox_d6ft8fkg_83dwr322z4wcy63s'
+    }, function(err, instance) {
+
+      if (err) {
+        return alert(err);
+      }
+
+      instance.request({
+        'endpoint' : 'payment_methods/credit_cards',
+        'method'   : 'post',
+        'data'     : {
+          'creditCard' : {
+            'number'     : '{{number}}',
+            'cvv'        : '{{cvv}}',
+            'expirationDate' : '{{expirationDate}}',
+            'billingAddress': {}
+          }
+        }
+      }, function (err, response) {
+        if (err || !response.creditCards || ! response.creditCards[0].nonce) {
+          return alert(err);
+        }
+
+        $('#nonce').val(response.creditCards[0].nonce);
+        $('#braintree-form').submit();
+      });
+    });
+
+  });
+</script>
+{{/contentFor}}
+
+<form id="braintree-form" method="post" action="/braintree" class="hide">
+  <input type="hidden" id="nonce" name="nonce"/>
+  <input type="text" id="secret" name="secret" value="{{ciphertext}}"/>
+</form>

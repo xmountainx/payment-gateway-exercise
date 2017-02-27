@@ -1,23 +1,25 @@
 'use strict'
 
 // libraries
-var debug = require('debug')('create-payment');
-var phone = require('phone');
-var valid = require('card-validator');
-var types = require('credit-card-type').types;
+var debug  = require('debug')('create-payment');
+var phone  = require('phone');
+var config = require('config');
+var valid  = require('card-validator');
+var types  = require('credit-card-type').types;
 
+// payment providers
 var payments = require('../libs/payment-providers');
 
-// const
-var CURRENCY_LIST = ['HKD', 'USD', 'AUD', 'EUR', 'JPY', 'CNY'];
+// suported currency
+var currencyList = config.get('supported-currencies');
 
-// RouteObject
+// Route Object
 var route = {};
 
 route.render = function(req, res) {
   return res.render('create-payment', {
     'errors' : req.errors,
-    'supportedCurrencies' : CURRENCY_LIST,
+    'supportedCurrencies' : currencyList,
     'params' : req.body
   });
 };
@@ -44,7 +46,8 @@ route.handle = function(req, res) {
     return route.render(req, res);
   }
 
-  res.send(provider);
+  // make payment with payment provider
+  provider.execute(req, res, params);
 };
 
 route.extractParams = function(req) {
@@ -57,13 +60,19 @@ route.extractParams = function(req) {
     'holder'   : req.body.creditCardHolderName,
     'cardNum'  : req.body.creditCardNumber,
     'expire'   : req.body.creditCardExpiration,
-    'ccv'      : req.body.creditCardCcv
+    'cvv'      : req.body.creditCardCvv
   };
 
   params.phone = phone('+' + params.areaCode + ' ' + params.phoneNum);
   params.card  = valid.number(params.cardNum);
 
-  var expire = params.expire.split('/');
+  var holder = params.holder ? params.holder.split(' ') : [];
+  if (holder.length > 1) {
+    params.holderFirstName = holder[0];
+    params.holderLastName = params.holder.substr(holder[0].length + 1);
+  }
+
+  var expire = params.expire ? params.expire.split('/') : [];
   if (expire.length === 2) {
     params.expireMonth = parseInt(expire[0]);
     params.expireYear = parseInt(expire[1]);
@@ -87,7 +96,7 @@ route.validate = function(req, params) {
   }
   if (!params.currency) {
     errors.push('Currency cannot be empty');
-  } else if (CURRENCY_LIST.indexOf(params.currency) === -1) {
+  } else if (currencyList.indexOf(params.currency) === -1) {
     errors.push('Selected Currency doesn\'t support');
   }
   if (!params.price) {
@@ -95,8 +104,8 @@ route.validate = function(req, params) {
   } else if (isNaN(params.price)) {
     errors.push('Price must be a number');
   }
-  if (!params.holder) {
-    errors.push('Credit Card Holder Name cannot be empty');
+  if (!params.holderFirstName || !params.holderLastName) {
+    errors.push('Credit Card Holder Name must be in "first_name last_name" format');
   }
   if (!params.cardNum) {
     errors.push('Credit Card Number cannot be empty');
@@ -108,8 +117,8 @@ route.validate = function(req, params) {
   } else if (!params.expireMonth || params.expireMonth < 1 || params.expireMonth > 12 || !params.expireYear) {
     errors.push('Credit Card Expiration is not valid');
   }
-  if (!params.ccv) {
-    errors.push('Credit Card CCV cannot be empty');
+  if (!params.cvv) {
+    errors.push('Credit Card CVV cannot be empty');
   }
 
   if (errors.length > 0) {

@@ -1,0 +1,37 @@
+{
+    "paypal": {
+        "mode": "sandbox",
+        "client_id": "AbYUZj-6i3X-XpTgf_I1iZvllswY8_C3SCHQ2ENehTKQPqIuzqIZv06ZAbs7GZXdXYCGG7cMyTLHH7eP",
+        "client_secret": "EDWYgOVr0u3ELDchDGzX3BZylk5HApMkc2bGiQliXi4t8kRZjnO1tZgTRpzdImYRDKe_y5gcrQ4tyLwK",
+        "headers": {
+            "custom": "header"
+        }
+    },
+    "paypal-card-type-mapping": {
+        "visa": "visa",
+        "master-card": "mastercard",
+        "american-express": "amex",
+        "discover": "discover",
+        "jcb": "jcb"
+    },
+    "braintree": {
+        "merchantId": "83dwr322z4wcy63s",
+        "publicKey": "7gbk9bnv22k6fdvd",
+        "privateKey": "4ef30a2209674d79c1a4316e8433d171"
+    },
+    "supported-currencies": [
+        "HKD", "USD", "AUD", "EUR", "JPY", "CNY"
+    ],
+    "encrypt" : {
+        "algorithm" : "aes-256-ctr",
+        "password" : "mn5ajdkn4s"
+    },
+    "mongo": {
+        "url" : "mongodb://payment-user:payment-user@ds163699.mlab.com:63699/payment-gateway-exercise"
+    },
+    "redis": {
+        "host" : "localhost",
+        "db"   : 0,
+        "ttl"  : 60
+    }
+}

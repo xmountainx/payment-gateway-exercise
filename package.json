@@ -8,13 +8,20 @@
   "main": "bin/www",
   "dependencies": {
     "body-parser": "~1.16.0",
+    "braintree": "^2.0.2",
+    "cache-manager": "^2.4.0",
+    "cache-manager-redis": "^0.4.0",
     "card-validator": "^4.0.0",
+    "config": "^1.25.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "express": "~4.14.1",
     "express-hbs": "^1.0.4",
+    "express-validator": "^3.1.2",
     "hbs": "~4.0.1",
+    "mongoose": "^4.8.5",
     "morgan": "~1.7.0",
+    "paypal-rest-sdk": "^1.7.1",
     "phone": "^1.0.9",
     "serve-favicon": "~2.3.2"
   }
