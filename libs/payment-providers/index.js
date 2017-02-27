@@ -3,6 +3,6 @@
 var providers = {};
 
 providers.paypal = require('./paypal');
-providers.braintree = { 'name' : 'braintree' };
+providers.braintree = require('./braintree');
 
 module.exports = providers;

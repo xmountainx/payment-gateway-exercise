@@ -21,5 +21,17 @@
     },
     "supported-currencies": [
         "HKD", "USD", "AUD", "EUR", "JPY", "CNY"
-    ]
+    ],
+    "encrypt" : {
+        "algorithm" : "aes-256-ctr",
+        "password" : "mn5ajdkn4s"
+    },
+    "mongo": {
+        "url" : "mongodb://payment-user:payment-user@ds163699.mlab.com:63699/payment-gateway-exercise"
+    },
+    "redis": {
+        "host" : "localhost",
+        "db"   : 0,
+        "ttl"  : 60
+    }
 }

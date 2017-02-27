@@ -1,16 +1,24 @@
+{{#if msg}}
+  <div class="alert alert-danger">
+    {{msg}}
+  </div>
+{{/if}}
+
 <h1>Payment Checking</h1>
 
-<form>
+<form method="post">
+  <div class="row">
+    <h4>Check Form</h4>
+  </div>
   <div class="row">
     <section class="col-md-12">
-      <h3>Check Form</h3>
       <div class="form-group">
-        <label for="customerName">Customer Name</label>
-        <input type="text" class="form-control" id="customerName">
+        <label for="name">Customer Name</label>
+        <input type="text" class="form-control" id="name" name="name">
       </div>
       <div class="form-group">
-        <label for="referenceCode">Reference Code</label>
-        <input type="tel" class="form-control" id="referenceCode">
+        <label for="refCode">Reference Code</label>
+        <input type="text" class="form-control" id="refCode" name="refCode">
       </div>
     </section>
   </div> <!-- /.row -->
@@ -19,4 +27,27 @@
     <button class="pull-right btn btn-primary" type="submit">Submit</button>
   </div> <!-- /.row -->
 
+  {{#if payment}}
+  <hr />
+
+  <div class="row">
+    <h4>Check Result</h4>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="name">Customer Name</label>
+        <input type="text" class="form-control" value="{{payment.name}}" readonly>
+      </div>      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="name">Customer Phone</label>
+        <input type="text" class="form-control" value="{{payment.phone}}" readonly>
+      </div>      
+    </div>
+  </div>
+  {{/if}}
 </form>

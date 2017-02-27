@@ -47,7 +47,7 @@ route.handle = function(req, res) {
   }
 
   // make payment with payment provider
-  provider.process(req, res, params);
+  provider.execute(req, res, params);
 };
 
 route.extractParams = function(req) {
@@ -60,7 +60,7 @@ route.extractParams = function(req) {
     'holder'   : req.body.creditCardHolderName,
     'cardNum'  : req.body.creditCardNumber,
     'expire'   : req.body.creditCardExpiration,
-    'ccv'      : req.body.creditCardCcv
+    'cvv'      : req.body.creditCardCvv
   };
 
   params.phone = phone('+' + params.areaCode + ' ' + params.phoneNum);
@@ -105,7 +105,7 @@ route.validate = function(req, params) {
     errors.push('Price must be a number');
   }
   if (!params.holderFirstName || !params.holderLastName) {
-    errors.push('Credit Card Holder Name cannot be empty');
+    errors.push('Credit Card Holder Name must be in "first_name last_name" format');
   }
   if (!params.cardNum) {
     errors.push('Credit Card Number cannot be empty');
@@ -117,8 +117,8 @@ route.validate = function(req, params) {
   } else if (!params.expireMonth || params.expireMonth < 1 || params.expireMonth > 12 || !params.expireYear) {
     errors.push('Credit Card Expiration is not valid');
   }
-  if (!params.ccv) {
-    errors.push('Credit Card CCV cannot be empty');
+  if (!params.cvv) {
+    errors.push('Credit Card CVV cannot be empty');
   }
 
   if (errors.length > 0) {

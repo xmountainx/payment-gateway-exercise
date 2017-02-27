@@ -1,6 +1,6 @@
 'use strict'
 
-var debug = require('debug')('create-payment');
+var debug = require('debug')('paypal');
 var config = require('config');
 var sdk = require('paypal-rest-sdk');
 
@@ -27,13 +27,13 @@ paypal.execute = function(req, res, params) {
       'number' : params.cardNum,
       'expire_month': '' + params.expireMonth,
       'expire_year': '' + params.expireYear,
-      'cvv2': params.ccv,
+      'cvv2': params.cvv,
       'first_name': params.holderFirstName,
       'last_name': params.holderLastName,
       'billing_address' : { /* due to no address provided, use sample */
-        'line1': '52 N Main ST',
-        'city': 'Johnstown',
-        'state': 'OH',
+        'line1': 'xxx',
+        'city': 'xxx',
+        'state': 'xxx',
         'postal_code': '43210',
         'country_code': 'US'
       }
@@ -58,7 +58,15 @@ paypal.execute = function(req, res, params) {
 
   sdk.payment.create(payment, function(err, payment) {
     var paymentId = !err && payment ? payment.id : null;
-    paypal.onPaymentCompleted(err, payment.id, payment);
+
+    paypal.onPaymentCompleted(err, {
+      'paymentId' : paymentId,
+      'result' :    payment,
+      'provider' :  paypal.name,
+      'params' :    params,
+      'req' :       req,
+      'res' :       res
+    });
   });
 
 };
@@ -68,11 +76,10 @@ paypal.check = function(paymentId, done) {
   return sdk.payment.get(paymentId, cb);
 };
 
-paypal.onPaymentCompleted = function(err, paymentId, details) {
+paypal.onPaymentCompleted = function(err, context) {
   // fake event 
   debug(err);
-  debug(paymentId);
-  debug(details)
+  debug(context);
 };
 
 module.exports = paypal;
